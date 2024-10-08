@@ -18,15 +18,8 @@ pub fn rust_main() -> ! {
     clear_bss();
     logger::init();
 
-    sbi::console_write_byte('O' as u8);
-    sbi::console_write_byte('K' as u8);
-    sbi::console_write_byte('\n' as u8);
-
-    trace!("Hello World.");
-    debug!("Hello World.");
-    info!("Hello World.");
-    warn!("Hello World.");
-    error!("Hello World.");
+    print_system_info();
+    print_to_console();
 
     panic!("Shutdown machine!");
 }
@@ -39,4 +32,34 @@ fn clear_bss() {
     (sbss as usize..ebss as usize).for_each(|a| {
         unsafe { (a as *mut u8).write_volatile(0) }
     });
+}
+
+fn print_to_console() {
+    sbi::console_write_byte('O' as u8);
+    sbi::console_write_byte('K' as u8);
+    sbi::console_write_byte('\n' as u8);
+
+    trace!("Hello World.");
+    debug!("Hello World.");
+    info!("Hello World.");
+    warn!("Hello World.");
+    error!("Hello World.");
+}
+
+fn print_system_info() {
+    extern "C" {
+        fn stext();
+        fn etext();
+        fn sdata();
+        fn edata();
+        fn srodata();
+        fn erodata();
+        fn sbss();
+        fn ebss();
+    }
+
+    info!(".text [{:#x}, {:#x}]", stext as usize, etext as usize);
+    info!(".rodata [{:#x}, {:#x}]", srodata as usize, erodata as usize);
+    info!(".data [{:#x}, {:#x}]", sdata as usize, edata as usize);
+    info!(".bss [{:#x}, {:#x}]", sbss as usize, ebss as usize);
 }

@@ -8,6 +8,9 @@ mod logger;
 #[macro_use]
 mod console;
 
+mod batch;
+mod sync;
+
 use core::arch::global_asm;
 use log::{debug, error, info, trace, warn};
 

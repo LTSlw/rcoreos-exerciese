@@ -10,11 +10,14 @@ mod console;
 
 mod batch;
 mod sync;
+mod trap;
+mod syscall;
 
 use core::arch::global_asm;
 use log::{debug, error, info, trace, warn};
 
 global_asm!(include_str!("entry.asm"));
+global_asm!(include_str!("link_app.S"));
 
 #[no_mangle]
 pub fn rust_main() -> ! {
@@ -24,7 +27,9 @@ pub fn rust_main() -> ! {
     print_system_info();
     print_to_console();
 
-    panic!("Shutdown machine!");
+    trap::init();
+    batch::init();
+    batch::run_next_app();
 }
 
 fn clear_bss() {

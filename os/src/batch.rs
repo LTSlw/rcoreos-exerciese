@@ -1,4 +1,4 @@
-use core::{arch::asm, mem, slice};
+use core::{arch::asm, mem, slice, usize};
 
 use lazy_static::*;
 use log::info;
@@ -132,4 +132,8 @@ pub fn run_next_app() -> ! {
         )) as *const _ as usize);
     }
     panic!("Unreachable in batch::run_current_app");
+}
+
+pub fn check_mem(ptr: usize) -> bool {
+    APP_BASE_ADDRESS <= ptr && ptr <= APP_BASE_ADDRESS + APP_SIZE_LIMIT
 }

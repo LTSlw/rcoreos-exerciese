@@ -17,15 +17,16 @@ use core::arch::global_asm;
 use log::{debug, error, info, trace, warn};
 
 global_asm!(include_str!("entry.asm"));
-global_asm!(include_str!("link_app.S"));
+// global_asm!(include_str!("link_app.S"));
+global_asm!(include_str!("link_app_test.S"));
 
 #[no_mangle]
 pub fn rust_main() -> ! {
     clear_bss();
     logger::init();
 
-    print_system_info();
-    print_to_console();
+    // print_system_info();
+    // print_to_console();
 
     trap::init();
     batch::init();
@@ -42,6 +43,7 @@ fn clear_bss() {
     });
 }
 
+#[allow(dead_code)]
 fn print_to_console() {
     sbi::console_write_byte('O' as u8);
     sbi::console_write_byte('K' as u8);
@@ -54,6 +56,7 @@ fn print_to_console() {
     error!("Hello World.");
 }
 
+#[allow(dead_code)]
 fn print_system_info() {
     extern "C" {
         fn stext();

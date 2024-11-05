@@ -2,6 +2,7 @@
 
 #[macro_use]
 pub mod console;
+pub use console::STDOUT;
 mod syscall;
 mod lang_items;
 

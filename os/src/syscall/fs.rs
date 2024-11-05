@@ -1,8 +1,13 @@
 use core::{slice, str};
 
+use crate::batch::check_mem;
+
 const FD_STDOUT: usize = 1;
 
 pub fn sys_write(fd: usize, buf: *const u8, len: usize) -> isize {
+    if !check_mem(buf as usize) || !check_mem(buf as usize + len) {
+        return -1;
+    }
     match fd {
         FD_STDOUT => {
             let slice = unsafe { slice::from_raw_parts(buf, len) };
@@ -11,7 +16,7 @@ pub fn sys_write(fd: usize, buf: *const u8, len: usize) -> isize {
             len as isize
         }
         _ => {
-            panic!("Unsupported fd in sys_write!");
+            return -1;
         }
     }
 }
